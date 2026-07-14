@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MJ Furniture — Timeless 3D Animation</title>
+    <meta name="description" content="Premium luxury 3D furniture animation using 291 frames. Scroll to experience the journey of handcrafted design.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0b0b0b;
+            --black-soft: #141311;
+            --white: #f8f8f6;
+            --walnut: #6b4a34;
+            --walnut-dark: #3e2a1d;
+            --walnut-light: #9c7355;
+            --gold: #c9a961;
+            --gold-light: #e8d9b5;
+            --gold-dark: #8a6f3b;
+            --gray: #e8e6e1;
+            --gray-dark: #8a877f;
+            --line: rgba(248,248,246,0.14);
+            --line-soft: rgba(11,11,11,0.1);
+            --glass-dark: rgba(11,11,11,0.55);
+            --glass-light: rgba(248,248,246,0.08);
+            --ease: cubic-bezier(.22,1,.36,1);
+            --ease-soft: cubic-bezier(.16,.84,.44,1);
+            --font-sans: 'Inter', -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            --font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-sans);
+            font-weight: 400;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        @media (hover: none) {
+            body, a, button { cursor: auto; }
+            .cursors { display: none; }
+        }
+        img { display: block; max-width: 100%; }
+        a { color: inherit; text-decoration: none; }
+        button {
+            font-family: inherit;
+            background: none;
+            border: none;
+            color: inherit;
+        }
+        ul { list-style: none; }
+        svg { display: block; }
+        ::selection {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .cursors { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+        .cursor-dot {
+            position: absolute; width: 8px; height: 8px; border-radius: 50%;
+            background: var(--gold); transform: translate(-50%, -50%);
+            transition: width .25s, height .25s, opacity .25s;
+            mix-blend-mode: difference;
+        }
+        .cursor-ring {
+            position: absolute; width: 38px; height: 38px; border-radius: 50%;
+            border: 1px solid rgba(248,248,246,.5); transform: translate(-50%, -50%);
+            transition: width .35s, height .35s, border-color .35s, background .35s;
+        }
+        .cursor-ring.grow { width: 70px; height: 70px; background: rgba(201,169,97,.1); border-color: var(--gold); }
+
+        .wrap {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 64px;
+        }
+        @media (max-width: 900px) {
+            .wrap { padding: 0 24px; }
+        }
+        .eyebrow {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 16px;
+            color: var(--gold-light);
+            letter-spacing: .02em;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+        .section-head {
+            max-width: 640px;
+            margin-bottom: 64px;
+        }
+        .section-head h2 {
+            font-size: clamp(32px, 4.6vw, 58px);
+            font-weight: 500;
+            letter-spacing: -.02em;
+            line-height: 1.08;
+        }
+        .section-head p {
+            margin-top: 18px;
+            color: var(--gray-dark);
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 480px;
+        }
+        .accent {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold-light);
+        }
+        section { position: relative; z-index: 1; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 34px;
+            font-size: 12px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .btn-gold {
+            background: var(--gold);
+            color: var(--black);
+        }
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold-light);
+            transform: translateX(-102%);
+            transition: transform .5s var(--ease);
+            z-index: -1;
+        }
+        .btn-gold:hover::before { transform: translateX(0); }
+        .btn-ghost {
+            border: 1px solid var(--line);
+            color: var(--white);
+        }
+        .btn-ghost:hover {
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+
+        .magnetic {
+            transition: transform .25s var(--ease-soft);
+        }
+
+        header#nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 900;
+            padding: 26px 0;
+            transition: padding .4s var(--ease), background .4s var(--ease), border-color .4s;
+            border-bottom: 1px solid transparent;
+        }
+        header#nav.scrolled {
+            padding: 16px 0;
+            background: rgba(11,11,11,.68);
+            backdrop-filter: blur(18px) saturate(140%);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 20px;
+            letter-spacing: .28em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--gold-light); }
+        .nav-links {
+            display: flex;
+            gap: 44px;
+        }
+        @media (max-width: 1000px) {
+            .nav-links { display: none; }
+        }
+        .nav-links li { position: relative; }
+        .nav-links a {
+            font-size: 12.5px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: 6px 0;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width .35s var(--ease);
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .nav-icon {
+            position: relative;
+            opacity: .9;
+            transition: opacity .3s, transform .3s;
+        }
+        .nav-icon:hover { opacity: 1; transform: translateY(-2px); }
+        .nav-icon svg {
+            width: 19px; height: 19px;
+            stroke: currentColor;
+        }
+        .cart-count {
+            position: absolute;
+            top: -7px; right: -9px;
+            background: var(--gold);
+            color: var(--black);
+            font-size: 9px;
+            font-weight: 700;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: .045;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .ambient span {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: .35;
+        }
+        .ambient .a1 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, var(--walnut) 0%, transparent 70%);
+            top: -20%; left: -10%;
+        }
+        .ambient .a2 {
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            bottom: -15%; right: -10%;
+            opacity: .14;
+        }
+
+        .hero {
+            height: 100svh;
+            min-height: 680px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: #0b0b0b;
+        }
+        .hero-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+            will-change: transform;
+            image-rendering: auto;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--black) 0%, transparent 30%, transparent 70%, var(--black) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+
+        .loading-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 10000;
+            background: var(--black-soft);
+        }
+        .loading-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--walnut), var(--gold));
+            transition: width .3s;
+        }
+
+        .marquee {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 22px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            background: var(--black-soft);
+        }
+        .marquee-track {
+            display: inline-flex;
+            gap: 60px;
+            animation: marquee 32s linear infinite;
+        }
+        .marquee-track span {
+            font-size: 13px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 60px;
+        }
+        .marquee-track span i {
+            color: var(--gold);
+            font-style: normal;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(46px); }
+        .reveal-fade { opacity: 0; }
+
+        .collections {
+            padding: 160px 0;
+            background: linear-gradient(180deg, var(--black) 0%, #141210 100%);
+        }
+        .coll-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+        @media (max-width: 900px) {
+            .coll-grid { grid-template-columns: 1fr; }
+        }
+        .coll-card {
+            position: relative;
+            aspect-ratio: 1.65;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(150deg, #1c1a17, #0c0b0a);
+            border: 1px solid var(--line);
+            transition: transform .5s var(--ease), border-color .5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .coll-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+        }
+        .coll-card svg { width: 80%; opacity: .85; transition: transform .7s var(--ease), opacity .5s; }
+        .coll-card:hover svg { transform: scale(1.04); opacity: 1; }
+        .coll-overlay {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 28px;
+            background: linear-gradient(0deg, rgba(0,0,0,.9), transparent);
+        }
+        .coll-tag {
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            margin-bottom: 6px;
+        }
+        .coll-overlay h3 {
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: -.01em;
+        }
+        .coll-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 12px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            transition: color .3s;
+        }
+        .coll-link:hover { color: var(--gold-light); }
+
+        .craftsmanship {
+            padding: 160px 0;
+            background: linear-gradient(180deg, var(--black) 0%, #141210 50%, var(--black) 100%);
+            position: relative;
+        }
+        .craftsmanship::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(201,169,97,.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .craftsmanship-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 80px;
+        }
+        @media (max-width: 900px) {
+            .craftsmanship-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 560px) {
+            .craftsmanship-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .craftsmanship-item {
+            position: relative;
+            padding: 40px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(160deg, rgba(248,248,246,.04), transparent);
+            transition: transform .5s var(--ease), border-color .5s;
+            backdrop-filter: blur(6px);
+        }
+        .craftsmanship-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(201,169,97,.4);
+        }
+        .craftsmanship-icon {
+            width: 60px; height: 60px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .craftsmanship-icon svg {
+            width: 32px; height: 32px;
+            stroke: var(--gold);
+            stroke-width: 1.5;
+        }
+        .craftsmanship-item h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            letter-spacing: -.01em;
+        }
+        .craftsmanship-item p {
+            color: var(--gray-dark);
+            font-size: 14.5px;
+            line-height: 1.7;
+        }
+
+        .materials {
+            padding: 160px 0;
+            background: linear-gradient(180deg, #141210 0%, var(--black) 100%);
+            position: relative;
+        }
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 60px;
+        }
+        @media (max-width: 900px) {
+            .materials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .material-card {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(150deg, #20201d, #0c0b0a);
+            border: 1px solid var(--line);
+            transition: transform .5s var(--ease), border-color .5s;
+        }
+        .material-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--gold);
+        }
+        .material-art {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .material-art svg {
+            width: 56%;
+            opacity: .9;
+            transition: transform .7s var(--ease), opacity .5s;
+        }
+        .material-card:hover .material-art svg {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+        .material-overlay {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(0deg, rgba(0,0,0,.95), transparent);
+            transform: translateY(100%);
+            transition: transform .4s var(--ease);
+        }
+        .material-card:hover .material-overlay {
+            transform: translateY(0);
+        }
+        .material-overlay h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .material-overlay span {
+            font-size: 12px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--gold-light);
+        }
+
+        .inspiration {
+            padding: 160px 0;
+            background: linear-gradient(180deg, var(--black) 0%, #141210 100%);
+        }
+        .inspiration-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 220px;
+            gap: 18px;
+            margin-top: 60px;
+        }
+        @media (max-width: 900px) {
+            .inspiration-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .inspiration-item {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            background: linear-gradient(150deg, #1c1a17, #0c0b0a);
+            border: 1px solid var(--line);
+            transition: transform .5s var(--ease), border-color .5s;
+        }
+        .inspiration-item:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+        }
+        .inspiration-item.big {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .inspiration-art {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .inspiration-art svg {
+            width: 68%;
+            opacity: .9;
+            transition: transform .7s var(--ease), opacity .5s;
+        }
+        .inspiration-item:hover .inspiration-art svg {
+            transform: scale(1.06);
+            opacity: 1;
+        }
+        .inspiration-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,.8), transparent 40%);
+            display: flex;
+            align-items: flex-end;
+            padding: 26px;
+            opacity: 0;
+            transition: opacity .4s var(--ease);
+        }
+        .inspiration-item:hover .inspiration-overlay {
+            opacity: 1;
+        }
+        .inspiration-overlay p {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 18px;
+        }
+
+        .testimonials {
+            padding: 160px 0;
+            background: linear-gradient(180deg, #141210 0%, var(--black) 100%);
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 26px;
+            margin-top: 80px;
+        }
+        @media (max-width: 900px) {
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .testimonial-card {
+            position: relative;
+            padding: 40px;
+            border-radius: 8px;
+            background: linear-gradient(160deg, rgba(248,248,246,.04), transparent);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+            transition: transform .5s var(--ease), box-shadow .5s;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,.5);
+        }
+        .stars {
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            display: block;
+        }
+        .quote {
+            font-size: 16px;
+            line-height: 1.75;
+            color: rgba(248,248,246,.88);
+            margin-bottom: 26px;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--walnut-light), var(--walnut-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .author-info h5 {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .author-info span {
+            font-size: 11.5px;
+            color: var(--gray-dark);
+        }
+
+        .designer {
+            padding: 160px 0;
+            background: linear-gradient(180deg, var(--black) 0%, #141210 100%);
+            position: relative;
+        }
+        .designer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 60% 60%, rgba(201,169,97,.12) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .designer-panel {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: linear-gradient(150deg, #1a1815, #0c0b0a);
+        }
+        @media (max-width: 900px) {
+            .designer-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+        .designer-art {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            min-height: 420px;
+            background: radial-gradient(circle at 40% 30%, rgba(201,169,97,.12), transparent 70%);
+        }
+        .designer-art svg {
+            width: 78%;
+            filter: drop-shadow(0 30px 40px rgba(0,0,0,.5));
+        }
+        .designer-copy {
+            padding: 80px 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @media (max-width: 700px) {
+            .designer-copy {
+                padding: 44px 34px;
+            }
+        }
+        .designer-copy h6 {
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            margin-bottom: 18px;
+        }
+        .designer-copy h3 {
+            font-size: clamp(28px, 3.6vw, 42px);
+            font-weight: 500;
+            margin-bottom: 22px;
+            letter-spacing: -.01em;
+        }
+        .designer-copy p {
+            color: var(--gray-dark);
+            line-height: 1.8;
+            font-size: 15.5px;
+            margin-bottom: 32px;
+        }
+        .designer-sig {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 24px;
+            color: var(--gold-light);
+            margin-bottom: 6px;
+        }
+        .designer-sig + span {
+            font-size: 11.5px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+        }
+
+        .newsletter {
+            padding: 160px 0;
+            background: linear-gradient(180deg, #0c0b0a 0%, var(--black) 100%);
+        }
+        .newsletter-card {
+            border-radius: 12px;
+            padding: 90px 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(150deg, rgba(107,74,52,.35), rgba(11,11,11,.9));
+            border: 1px solid var(--line);
+        }
+        .newsletter-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(201,169,97,.18), transparent 60%);
+        }
+        .newsletter-card h2 {
+            font-size: clamp(30px, 4.4vw, 52px);
+            font-weight: 500;
+            letter-spacing: -.02em;
+            max-width: 640px;
+            margin: 0 auto 18px;
+            position: relative;
+        }
+        .newsletter-card p {
+            color: var(--gray-dark);
+            max-width: 440px;
+            margin: 0 auto 40px;
+            font-size: 15px;
+            line-height: 1.7;
+            position: relative;
+        }
+        .newsletter-form {
+            display: flex;
+            max-width: 440px;
+            margin: 0 auto;
+            gap: 12px;
+            position: relative;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .newsletter-form input {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(248,248,246,.06);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 17px 24px;
+            color: var(--white);
+            font-size: 14px;
+        }
+        .newsletter-form input::placeholder {
+            color: var(--gray-dark);
+        }
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 100px 0 40px;
+            background: var(--black-soft);
+        }
+        .foot-grid {
+            display: grid;
+            grid-template-columns: 1.4fr repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        @media (max-width: 900px) {
+            .foot-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .foot-brand .logo {
+            margin-bottom: 20px;
+        }
+        .foot-brand p {
+            color: var(--gray-dark);
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 280px;
+            margin-bottom: 26px;
+        }
+        .foot-social {
+            display: flex;
+            gap: 14px;
+        }
+        .foot-social a {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .3s;
+        }
+        .foot-social a:hover {
+            border-color: var(--gold);
+            color: var(--gold-light);
+            transform: translateY(-3px);
+        }
+        .foot-social svg {
+            width: 15px; height: 15px;
+        }
+        .foot-col h5 {
+            font-size: 11.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            margin-bottom: 22px;
+        }
+        .foot-col a {
+            display: block;
+            font-size: 14.5px;
+            padding: 8px 0;
+            color: rgba(248,248,246,.78);
+            transition: .25s;
+        }
+        .foot-col a:hover {
+            color: var(--gold-light);
+            padding-left: 4px;
+        }
+        .foot-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-top: 30px;
+            border-top: 1px solid var(--line);
+            font-size: 12px;
+            color: var(--gray-dark);
+        }
+        .foot-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%) translateY(140%);
+            background: var(--white);
+            color: var(--black);
+            padding: 16px 28px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .03em;
+            z-index: 9700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform .5s var(--ease);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast svg {
+            width: 16px; height: 16px;
+            stroke: var(--gold);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(46px);
+            transition: opacity 1s var(--ease), transform 1s var(--ease);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 980px) {
+            .materials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .foot-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-bar"><div class="loading-bar-inner" id="loadingBar"></div></div>
+    <div class="grain"></div>
+    <div class="ambient">
+        <span class="a1"></span>
+        <span class="a2"></span>
+    </div>
+
+    <div class="cursors">
+        <div class="cursor-dot" id="cursorDot"></div>
+        <div class="cursor-ring" id="cursorRing"></div>
+    </div>
+
+    <header id="nav">
+        <div class="wrap">
+            <div class="nav-inner">
+                <a href="#" class="logo">MJ <span>Furniture</span></a>
+                <ul class="nav-links">
+                    <li><a href="#collections">Collections</a></li>
+                    <li><a href="#craftsmanship">Craftsmanship</a></li>
+                    <li><a href="#materials">Materials</a></li>
+                    <li><a href="#inspiration">Inspiration</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="#" class="nav-icon" aria-label="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </a>
+                    <a href="#" class="nav-icon" aria-label="Cart">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <canvas id="heroCanvas" class="hero-canvas"></canvas>
+        <div class="hero-overlay"></div>
+    </section>
+
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>Hand-Finished in Italy <i>✦</i> Solid Walnut &amp; Cast Bronze <i>✦</i> Complimentary White-Glove Delivery <i>✦</i> Lifetime Craftsmanship Guarantee <i>✦</i></span>
+            <span>Hand-Finished in Italy <i>✦</i> Solid Walnut &amp; Cast Bronze <i>✦</i> Complimentary White-Glove Delivery <i>✦</i> Lifetime Craftsmanship Guarantee <i>✦</i></span>
+        </div>
+    </div>
+
+    <!-- FEATURED COLLECTIONS -->
+    <section class="collections" id="collections">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow">Curated Worlds</span>
+                <h2>Three collections, <span class="accent">one philosophy</span></h2>
+                <p>Each collection is designed as a complete interior language — proportion, patina, and material working in concert.</p>
+            </div>
+            <div class="coll-grid">
+                <div class="coll-card reveal">
+                    <div class="coll-border"></div>
+                    <div class="coll-art"><svg viewBox="0 0 620 340"><use href="#s-sofa"/></svg></div>
+                    <div class="coll-overlay">
+                        <div class="coll-tag">01 — Volume</div>
+                        <h3>The Reverie Suite</h3>
+                        <a class="coll-link" href="#">Discover the pieces →</a>
+                    </div>
+                </div>
+                <div class="coll-card reveal">
+                    <div class="coll-border"></div>
+                    <div class="coll-art"><svg viewBox="0 0 320 360"><use href="#s-armchair"/></svg></div>
+                    <div class="coll-overlay">
+                        <div class="coll-tag">02 — Repose</div>
+                        <h3>Sage &amp; Solitude</h3>
+                        <a class="coll-link" href="#">Discover the pieces →</a>
+                    </div>
+                </div>
+                <div class="coll-card reveal">
+                    <div class="coll-border"></div>
+                    <div class="coll-art"><svg viewBox="0 0 420 260"><use href="#s-table"/></svg></div>
+                    <div class="coll-overlay">
+                        <div class="coll-tag">03 — Gilt Line</div>
+                        <h3>The Bronze Atelier</h3>
+                        <a class="coll-link" href="#">Discover the pieces →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CRAFTSMANSHIP -->
+    <section class="craftsmanship" id="craftsmanship">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow">The House</span>
+                <h2>Only the finest <span class="accent">materials</span> and techniques</h2>
+                <p>Every piece is finished by hand — because a chair that will outlive its owner deserves nothing less.</p>
+            </div>
+            <div class="craftsmanship-grid">
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+                    </div>
+                    <h3>Handcrafted Quality</h3>
+                    <p>100% hand-finished, zero mass production. Each piece undergoes 127 individual steps.</p>
+                </div>
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM12 14l-4-4h8l-4 4z"/></svg>
+                    </div>
+                    <h3>Premium Materials</h3>
+                    <p>Solid walnut, cast bronze, full-grain leather, marble inlays — sourced from master craftsmen.</p>
+                </div>
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h12v2H4v-2z"/></svg>
+                    </div>
+                    <h3>Italian Leather</h3>
+                    <p>Hand-upholstered using traditional techniques, ensuring comfort that ages gracefully with use.</p>
+                </div>
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M20 4H4v16h16V4zM12 12l-4-4h8l-4 4zM12 16l4-4h-8l4 4z"/></svg>
+                    </div>
+                    <h3>Marble Finishes</h3>
+                    <p>Hand-polished marble tops for countertops and decorative elements, each unique in pattern.</p>
+                </div>
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 6l10-4 10 4v2l-10 4L3 8V6zm0 4l10 4v8l-10 4v-8zm10 4v8l10-4v-8L13 6z"/></svg>
+                    </div>
+                    <h3>Sustainable Materials</h3>
+                    <p>Certified sustainable sourcing,Zero-waste production processes, Recycled packaging materials.</p>
+                </div>
+                <div class="craftsmanship-item reveal">
+                    <div class="craftsmanship-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l9.5 5.5v11L12 22l-9.5-5.5v-11L12 2zm0 4.5l-4.5 2.6L12 15l4.5-2.6L12 6.5zm0 6.5l-4.5-2.6L12 18.5l4.5-2.6L12 12z"/></svg>
+                    </div>
+                    <h3>Lifetime Durability</h3>
+                    <p>Structural lifetime warranty, hand-coded legacy pieces designed to outlive generations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MATERIALS -->
+    <section class="materials" id="materials">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow">Material Selection</span>
+                <h2>Pure <span class="accent">craftsmanship</span> meets perfect <span class="accent">form</span></h2>
+                <p>Each material tells a story of tradition, transformed through contemporary design.</p>
+            </div>
+            <div class="materials-grid">
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 420 260"><use href="#s-table"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Walnut Wood</h3>
+                        <span>Rich grain, warm tones</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 320 360"><use href="#s-armchair"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Oak</h3>
+                        <span>Solid grain, classic grain</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 200 420"><use href="#s-lamp"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Marble</h3>
+                        <span>Sculptural elegance</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 420 240"><use href="#s-storage"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Brass</h3>
+                        <span>Luminous warmth</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 620 340"><use href="#s-sofa"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Leather</h3>
+                        <span>Timeless texture</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 300 340"><use href="#s-outdoor"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Velvet</h3>
+                        <span>Lush richness</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 200 360"><use href="#s-dining"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Linen</h3>
+                        <span>Natural breathability</span>
+                    </div>
+                </div>
+                <div class="material-card reveal">
+                    <div class="material-art">
+                        <svg viewBox="0 0 420 260"><use href="#s-table"/></svg>
+                    </div>
+                    <div class="material-overlay">
+                        <h3>Glass</h3>
+                        <span>Crystalline clarity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSPIRATION GALLERY -->
+    <section class="inspiration" id="inspiration">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow">Interior Journal</span>
+                <h2>Luxury Living <span class="accent">Inspiration</span></h2>
+                <p> curated spaces where architecture and furniture become one.</p>
+            </div>
+            <div class="inspiration-grid">
+                <div class="inspiration-item big reveal">
+                    <div class="inspiration-art">
+                        <svg viewBox="0 0 620 340"><use href="#s-sofa"/></svg>
+                    </div>
+                    <div class="inspiration-overlay">
+                        <p>"A living room that breathes"</p>
+                    </div>
+                </div>
+                <div class="inspiration-item reveal">
+                    <div class="inspiration-art">
+                        <svg viewBox="0 0 200 420"><use href="#s-lamp"/></svg>
+                    </div>
+                    <div class="inspiration-overlay">
+                        <p>Ambient corners</p>
+                    </div>
+                </div>
+                <div class="inspiration-item reveal">
+                    <div class="inspiration-art">
+                        <svg viewBox="0 0 420 260"><use href="#s-table"/></svg>
+                    </div>
+                    <div class="inspiration-overlay">
+                        <p>The gilded line</p>
+                    </div>
+                </div>
+                <div class="inspiration-item reveal">
+                    <div class="inspiration-art">
+                        <svg viewBox="0 0 320 360"><use href="#s-armchair"/></svg>
+                    </div>
+                    <div class="inspiration-overlay">
+                        <p>A seat for stillness</p>
+                    </div>
+                </div>
+                <div class="inspiration-item reveal">
+                    <div class="inspiration-art">
+                        <svg viewBox="0 0 420 240"><use href="#s-storage"/></svg>
+                    </div>
+                    <div class="inspiration-overlay">
+                        <p>Storage as sculpture</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials" id="testimonials">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow">In Their Words</span>
+                <h2>Client <span class="accent">Reflections</span></h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal">
+                    <span class="stars">★★★★★</span>
+                    <p class="quote">The Belmont chair anchors our entire living room now. The proportions feel considered in a way most furniture simply isn't.</p>
+                    <div class="testimonial-author">
+                        <div class="avatar">A.R.</div>
+                        <div class="author-info">
+                            <h5>Amara R.</h5>
+                            <span>Los Angeles, CA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <span class="stars">★★★★★</span>
+                    <p class="quote">White-glove delivery was flawless. Two artisans assembled the sideboard on-site and walked us through the wood's care.</p>
+                    <div class="testimonial-author">
+                        <div class="avatar">J.K.</div>
+                        <div class="author-info">
+                            <h5>Julien K.</h5>
+                            <span>Paris, FR</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <span class="stars">★★★★★</span>
+                    <p class="quote">This is furniture you plan a room around, not the other way around. Worth every year of the guarantee.</p>
+                    <div class="testimonial-author">
+                        <div class="avatar">S.T.</div>
+                        <div class="author-info">
+                            <h5>Sophia T.</h5>
+                            <span>Singapore</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGNER SPOTLIGHT -->
+    <section class="designer" id="designer">
+        <div class="wrap">
+            <div class="designer-panel reveal">
+                <div class="designer-art">
+                    <svg viewBox="0 0 320 360"><use href="#s-armchair"/></svg>
+                </div>
+                <div class="designer-copy">
+                    <h6>Designer Collection — No. 07</h6>
+                    <h3>Elena Voss <span class="accent">for MJ Furniture</span></h3>
+                    <p>Trained under three generations of Milanese cabinetmakers, Elena Voss brings a sculptor's patience to upholstered form. Her Sage & Solitude collection reduces the armchair to its essential gesture — one curve, one shadow, one seat.</p>
+                    <div class="designer-sig">Elena Voss</div>
+                    <span>Creative Director, Milan Studio</span>
+                    <div style="margin-top: 34px;">
+                        <a href="#" class="btn btn-ghost magnetic">View the Collection</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter" id="contact">
+        <div class="wrap">
+            <div class="newsletter-card reveal">
+                <span class="eyebrow">Join the House</span>
+                <h2>Private access to new collections, <span class="accent">before anyone else.</span></h2>
+                <p>Twice a month. No noise — only what's new from the atelier.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-gold magnetic">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="wrap">
+            <div class="foot-grid">
+                <div class="foot-brand">
+                    <a href="#" class="logo">ATELIER <span>MJ Furniture</span></a>
+                    <p>Furniture as architecture. Hand-finished in Turin, Milan, and Kyoto since 1998.</p>
+                    <div class="foot-social">
+                        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+                        <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 17c1-3 2-6 2-8a3 3 0 1 1 6 0c0 2-1 5-2 6"/></svg></a>
+                        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="10" x2="8" y2="16"/><line x1="8" y1="7" x2="8" y2="7"/><line x1="12" y1="16" x2="12" y2="10"/><path d="M12 12c0-2 4-2 4 0v4"/></svg></a>
+                    </div>
+                </div>
+                <div class="foot-col"><h5>Shop</h5>
+                    <a href="#">Seating</a><a href="#">Tables</a><a href="#">Lighting</a><a href="#">Storage</a><a href="#">Outdoor</a>
+                </div>
+                <div class="foot-col"><h5>Atelier</h5>
+                    <a href="#">Our Story</a><a href="#">Designers</a><a href="#">Craftsmanship</a><a href="#">Sustainability</a>
+                </div>
+                <div class="foot-col"><h5>Client Care</h5>
+                    <a href="#">Delivery & Returns</a><a href="#">Care Guides</a><a href="#">Warranty</a><a href="#">Contact</a>
+                </div>
+                <div class="foot-col"><h5>Trade</h5>
+                    <a href="#">Interior Designers</a><a href="#">Showrooms</a><a href="#">Press</a><a href="#">Careers</a>
+                </div>
+            </div>
+            <div class="foot-bottom">
+                <span>© 2026 MJ Furniture. All rights reserved.</span>
+                <div class="foot-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SVG SPRITE -->
+    <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="s-sofa" viewBox="0 0 620 340"><rect x="20" y="80" width="580" height="180" rx="12" fill="#2a231d" stroke="#6b4a34" stroke-width="2"/><rect x="40" y="100" width="540" height="140" rx="8" fill="#3e2a1d"/><rect x="40" y="100" width="190" height="140" rx="8" fill="#4a3424"/><rect x="245" y="100" width="130" height="140" rx="8" fill="#3e2a1d"/><rect x="390" y="100" width="190" height="140" rx="8" fill="#4a3424"/><rect x="60" y="260" width="40" height="50" rx="4" fill="#2a231d"/><rect x="520" y="260" width="40" height="50" rx="4" fill="#2a231d"/><rect x="15" y="200" width="25" height="60" rx="6" fill="#6b4a34"/><rect x="580" y="200" width="25" height="60" rx="6" fill="#6b4a34"/><circle cx="310" cy="260" r="8" fill="#c9a961" opacity=".6"/><circle cx="310" cy="240" r="6" fill="#c9a961" opacity=".4"/><circle cx="310" cy="220" r="4" fill="#c9a961" opacity=".3"/></symbol>
+        <symbol id="s-armchair" viewBox="0 0 320 360"><rect x="40" y="120" width="240" height="160" rx="16" fill="#2a231d" stroke="#6b4a34" stroke-width="2"/><rect x="60" y="140" width="200" height="120" rx="10" fill="#3e2a1d"/><rect x="60" y="140" width="100" height="120" rx="10" fill="#4a3424"/><rect x="70" y="280" width="30" height="50" rx="4" fill="#2a231d"/><rect x="220" y="280" width="30" height="50" rx="4" fill="#2a231d"/><path d="M160 120 V70" stroke="#6b4a34" stroke-width="6" stroke-linecap="round"/><path d="M160 70 Q160 40 175 35" stroke="#6b4a34" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M160 70 Q160 40 145 35" stroke="#6b4a34" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="210" cy="200" r="7" fill="#c9a961" opacity=".5"/><circle cx="210" cy="185" r="5" fill="#c9a961" opacity=".3"/></symbol>
+        <symbol id="s-table" viewBox="0 0 420 260"><rect x="60" y="100" width="300" height="16" rx="4" fill="#6b4a34"/><rect x="40" y="116" width="340" height="12" rx="4" fill="#4a3424"/><rect x="80" y="128" width="12" height="80" rx="3" fill="#2a231d"/><rect x="328" y="128" width="12" height="80" rx="3" fill="#2a231d"/><rect x="180" y="128" width="8" height="70" rx="2" fill="#3e2a1d"/><rect x="232" y="128" width="8" height="70" rx="2" fill="#3e2a1d"/><div style="position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(201,169,97,.08), transparent)"/><circle cx="210" cy="108" r="6" fill="#c9a961" opacity=".4"/></symbol>
+        <symbol id="s-lamp" viewBox="0 0 200 420"><path d="M100 300 L100 380" stroke="#6b4a34" stroke-width="5" stroke-linecap="round"/><rect x="70" y="370" width="60" height="12" rx="4" fill="#2a231d"/><path d="M100 300 Q60 280 55 240 Q50 200 75 180" fill="none" stroke="#c9a961" stroke-width="3" opacity=".7"/><path d="M100 300 Q140 280 145 240 Q150 200 125 180" fill="none" stroke="#c9a961" stroke-width="3" opacity=".7"/><ellipse cx="100" cy="180" rx="30" ry="8" fill="#c9a961" opacity=".15"/><path d="M75 180 Q70 160 80 145 Q90 130 100 135" fill="none" stroke="#c9a961" stroke-width="2" opacity=".5"/><path d="M125 180 Q130 160 120 145 Q110 130 100 135" fill="none" stroke="#c9a961" stroke-width="2" opacity=".5"/></symbol>
+        <symbol id="s-storage" viewBox="0 0 420 240"><rect x="30" y="30" width="360" height="180" rx="6" fill="#2a231d" stroke="#6b4a34" stroke-width="2"/><rect x="45" y="45" width="160" height="150" rx="4" fill="#1e1814"/><rect x="215" y="45" width="160" height="150" rx="4" fill="#1e1814"/><circle cx="125" cy="120" r="5" fill="#c9a961" opacity=".5"/><circle cx="295" cy="120" r="5" fill="#c9a961" opacity=".5"/><rect x="390" y="70" width="18" height="100" rx="4" fill="#6b4a34"/></symbol>
+        <symbol id="s-outdoor" viewBox="0 0 300 340"><rect x="40" y="100" width="220" height="150" rx="10" fill="#2a231d" stroke="#6b4a34" stroke-width="2"/><rect x="55" y="115" width="90" height="120" rx="6" fill="#3e2a1d"/><rect x="155" y="115" width="90" height="120" rx="6" fill="#3e2a1d"/><rect x="70" y="250" width="25" height="60" rx="3" fill="#2a231d"/><rect x="205" y="250" width="25" height="60" rx="3" fill="#2a231d"/><line x1="70" y1="150" x2="230" y2="150" stroke="#c9a961" stroke-width="1" opacity=".3"/></symbol>
+        <symbol id="s-dining" viewBox="0 0 200 360"><rect x="30" y="80" width="140" height="10" rx="3" fill="#6b4a34"/><rect x="85" y="90" width="30" height="180" rx="4" fill="#2a231d"/><path d="M60 270 Q60 310 40 340" stroke="#2a231d" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M140 270 Q140 310 160 340" stroke="#2a231d" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="100" cy="85" r="4" fill="#c9a961" opacity=".4"/></symbol>
+    </svg>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="toastMsg">Added to cart</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const FRAME_COUNT = 291;
+        const FRAMES = new Array(FRAME_COUNT + 1);
+        let framesLoaded = 0;
+        let currentFrame = 0;
+        let heroReady = false;
+
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: false });
+        const loadingBar = document.getElementById('loadingBar');
+
+        function updateLoadingBar() {
+            const pct = Math.min(100, Math.round((framesLoaded / FRAME_COUNT) * 100));
+            loadingBar.style.width = pct + '%';
+            if (framesLoaded >= FRAME_COUNT) {
+                setTimeout(() => {
+                    loadingBar.style.transition = 'opacity 0.6s';
+                    loadingBar.style.opacity = '0';
+                }, 500);
+            }
+        }
+
+        function preloadAllFrames() {
+            let loaded = 0;
+            for (let i = 1; i <= FRAME_COUNT; i++) {
+                const img = new Image();
+                const padded = i.toString().padStart(3, '0');
+                img.src = 'ezgif-32e49a83143c4e71-jpg/ezgif-frame-' + padded + '.jpg';
+                img.onload = () => {
+                    FRAMES[i] = img;
+                    loaded++;
+                    framesLoaded++;
+                    updateLoadingBar();
+                    if (loaded >= FRAME_COUNT) initHeroAnimation();
+                };
+                img.onerror = () => {
+                    loaded++;
+                    framesLoaded++;
+                    updateLoadingBar();
+                    if (loaded >= FRAME_COUNT) initHeroAnimation();
+                };
+            }
+        }
+
+        function resizeCanvas() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            if (heroReady) drawFrame(currentFrame);
+        }
+
+        function drawFrame(idx) {
+            const img = FRAMES[idx];
+            if (!img || !img.width) return;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            ctx.clearRect(0, 0, w, h);
+            const ar = img.naturalWidth / img.naturalHeight;
+            const car = w / h;
+            let dw, dh, dx, dy;
+            if (ar > car) {
+                dh = h;
+                dw = dh * ar;
+                dx = (w - dw) / 2;
+                dy = 0;
+            } else {
+                dw = w;
+                dh = dw / ar;
+                dx = 0;
+                dy = (h - dh) / 2;
+            }
+            ctx.drawImage(img, dx, dy, dw, dh);
+        }
+
+        function initHeroAnimation() {
+            heroReady = true;
+            resizeCanvas();
+            if (FRAMES[1]) drawFrame(1);
+
+            const hero = document.getElementById('home');
+
+            ScrollTrigger.create({
+                trigger: hero,
+                start: 'top top',
+                end: '+=' + (FRAME_COUNT * 2.5) + '%',
+                pin: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+                scrub: 1,
+                onUpdate: self => {
+                    const idx = Math.min(Math.floor(self.progress * (FRAME_COUNT - 1)), FRAME_COUNT - 1) + 1;
+                    if (idx !== currentFrame) {
+                        currentFrame = idx;
+                        requestAnimationFrame(() => drawFrame(idx));
+                    }
+                }
+            });
+
+            ScrollTrigger.refresh();
+        }
+
+        let resizeTimer;
+        function handleResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                resizeCanvas();
+                ScrollTrigger.refresh();
+            }, 100);
+        }
+        window.addEventListener('resize', handleResize, { passive: true });
+        window.addEventListener('orientationchange', handleResize, { passive: true });
+
+        preloadAllFrames();
+
+        function initRevealAnimations() {
+            gsap.utils.toArray('.reveal').forEach(el => {
+                gsap.to(el, {
+                    opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+                    scrollTrigger: { trigger: el, start: 'top 88%' }
+                });
+            });
+            gsap.utils.toArray('.craftsmanship-item').forEach((item, i) => {
+                gsap.from(item, {
+                    opacity: 0, y: 40, duration: 1, ease: 'power3.out', delay: i * 0.15,
+                    scrollTrigger: { trigger: item, start: 'top 85%' }
+                });
+            });
+            gsap.utils.toArray('.material-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0, y: 40, duration: .8, ease: 'power3.out', delay: i * 0.08,
+                    scrollTrigger: { trigger: card, start: 'top 90%' }
+                });
+            });
+            gsap.utils.toArray('.inspiration-item').forEach((item, i) => {
+                gsap.from(item, {
+                    opacity: 0, y: 50, duration: .9, ease: 'power3.out', delay: i * 0.1,
+                    scrollTrigger: { trigger: item, start: 'top 85%' }
+                });
+            });
+            gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0, y: 40, duration: .9, ease: 'power3.out', delay: i * 0.15,
+                    scrollTrigger: { trigger: card, start: 'top 85%' }
+                });
+            });
+        }
+
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        window.addEventListener('load', () => {
+            setTimeout(initRevealAnimations, 200);
+        });
+
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorRing = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        function moveCursor() {
+            rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+            if (cursorDot) { cursorDot.style.left = mx + 'px'; cursorDot.style.top = my + 'px'; }
+            if (cursorRing) { cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px'; }
+            requestAnimationFrame(moveCursor);
+        }
+        moveCursor();
+        document.querySelectorAll('a, button, .magnetic').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorRing?.classList.add('grow'));
+            el.addEventListener('mouseleave', () => cursorRing?.classList.remove('grow'));
+        });
+        const navEl = document.getElementById('nav');
+        window.addEventListener('scroll', () => navEl?.classList.toggle('scrolled', window.scrollY > 40));
+
+        document.querySelectorAll('.magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', e => {
+                const r = btn.getBoundingClientRect();
+                const x = e.clientX - r.left - r.width / 2;
+                const y = e.clientY - r.top - r.height / 2;
+                gsap.to(btn, { x: x * 0.35, y: y * 0.5, duration: .4, ease: 'power3.out' });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: .5, ease: 'elastic.out(1,.4)' });
+            });
+        });
+
+        document.querySelector('.newsletter-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            if (email) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toastMsg').textContent = 'Welcome to the House — check your inbox';
+                toast.classList.add('show');
+                clearTimeout(window._toastTimer);
+                window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+                this.reset();
+            }
+        });
+    </script>
+</body>
+</html>
