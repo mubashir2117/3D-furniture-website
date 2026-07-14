@@ -319,7 +319,7 @@
             pointer-events: none;
         }
         .hero-inner a, .hero-inner button { pointer-events: auto; }
-        .hero-copy .eyebrow { opacity: 0; }
+
         .hero-copy h4 {
             font-size: clamp(28px, 4.5vw, 56px);
             font-weight: 700;
@@ -332,7 +332,6 @@
         .hero-copy h4 .line { display: block; overflow: hidden; }
         .hero-copy h4 .line span {
             display: inline-block;
-            transform: translateY(110%);
         }
         .hero-copy p.sub {
             margin-top: 28px;
@@ -340,7 +339,6 @@
             color: var(--gray);
             font-size: 17px;
             line-height: 1.85;
-            opacity: 0;
             font-weight: 400;
         }
         .hero-cta {
@@ -348,7 +346,6 @@
             display: flex;
             gap: 20px;
             align-items: center;
-            opacity: 0;
         }
         .scroll-indicator {
             position: absolute;
@@ -360,7 +357,6 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            opacity: 0;
             pointer-events: none;
         }
         .scroll-indicator span {
@@ -392,17 +388,6 @@
             100% { top: 46px; }
         }
 
-        #frameProgress {
-            position: absolute;
-            bottom: 38px;
-            right: 38px;
-            z-index: 6;
-            font-size: 11px;
-            letter-spacing: .1em;
-            color: var(--gray-dark);
-            font-variant-numeric: tabular-nums;
-            pointer-events: none;
-        }
 
         .loading-bar {
             position: fixed;
@@ -1136,7 +1121,6 @@
             <span>Scroll to explore</span>
             <div class="scroll-line"><i></i></div>
         </div>
-        <div id="frameProgress"></div>
     </section>
 
     <div class="marquee">
@@ -1522,36 +1506,35 @@
         let heroReady = false;
 
         const canvas = document.getElementById('heroCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: false });
         const loadingBar = document.getElementById('loadingBar');
-        const frameProgress = document.getElementById('frameProgress');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
 
         function updateLoadingBar() {
             const pct = Math.min(100, Math.round((framesLoaded / FRAME_COUNT) * 100));
             loadingBar.style.width = pct + '%';
             if (framesLoaded >= FRAME_COUNT) {
-                setTimeout(() => { loadingBar.style.opacity = '0'; }, 500);
+                setTimeout(() => {
+                    loadingBar.style.transition = 'opacity 0.6s';
+                    loadingBar.style.opacity = '0';
+                }, 500);
             }
         }
 
         function preloadNextBatch(start) {
-            const batchSize = 8;
+            const batchSize = 6;
             const end = Math.min(start + batchSize - 1, FRAME_COUNT);
+            if (start > FRAME_COUNT) return;
             let loaded = 0;
-            for (let idx = start; idx <= end; idx++) {
-                const frameIdx = idx;
+            for (let i = start; i <= end; i++) {
                 const img = new Image();
-                const padded = frameIdx.toString().padStart(3, '0');
+                const padded = i.toString().padStart(3, '0');
                 img.src = 'ezgif-32e49a83143c4e71-jpg/ezgif-frame-' + padded + '.jpg';
                 img.onload = () => {
-                    FRAMES[frameIdx] = img;
+                    FRAMES[i] = img;
                     loaded++;
                     framesLoaded++;
                     updateLoadingBar();
-                    if (loaded >= (end - start + 1) || framesLoaded >= FRAME_COUNT) {
+                    if (loaded === (end - start + 1)) {
                         if (framesLoaded < FRAME_COUNT) {
                             preloadNextBatch(end + 1);
                         } else {
@@ -1563,7 +1546,7 @@
                     loaded++;
                     framesLoaded++;
                     updateLoadingBar();
-                    if (loaded >= (end - start + 1) || framesLoaded >= FRAME_COUNT) {
+                    if (loaded === (end - start + 1)) {
                         if (framesLoaded < FRAME_COUNT) {
                             preloadNextBatch(end + 1);
                         } else {
@@ -1589,22 +1572,22 @@
         function drawFrame(idx) {
             const img = FRAMES[idx];
             if (!img || !img.width) return;
-            const cw = canvas.width / (window.devicePixelRatio || 1);
-            const ch = canvas.height / (window.devicePixelRatio || 1);
-            ctx.clearRect(0, 0, cw, ch);
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            ctx.clearRect(0, 0, w, h);
             const ar = img.naturalWidth / img.naturalHeight;
-            const car = cw / ch;
+            const car = w / h;
             let dw, dh, dx, dy;
             if (ar > car) {
-                dh = ch;
+                dh = h;
                 dw = dh * ar;
-                dx = (cw - dw) / 2;
+                dx = (w - dw) / 2;
                 dy = 0;
             } else {
-                dw = cw;
+                dw = w;
                 dh = dw / ar;
                 dx = 0;
-                dy = (ch - dh) / 2;
+                dy = (h - dh) / 2;
             }
             ctx.drawImage(img, dx, dy, dw, dh);
         }
@@ -1612,38 +1595,23 @@
         function initHeroAnimation() {
             heroReady = true;
             resizeCanvas();
-
             if (FRAMES[1]) drawFrame(1);
 
             const hero = document.getElementById('home');
-            gsap.to('#heroEyebrow', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' });
-            gsap.to('.hero-copy h4 .line span', {
-                y: '0%', duration: .9, stagger: .1, ease: 'power3.out', delay: .3
-            });
-            gsap.to('#heroSub', { opacity: 1, duration: .8, ease: 'power3.out', delay: .6 });
-            gsap.to('#heroCta', { opacity: 1, duration: .7, ease: 'power3.out', delay: .8 });
-            gsap.to('.scroll-indicator', { opacity: 1, duration: .5, delay: 1 });
 
-            let lastUpdate = 0;
             ScrollTrigger.create({
                 trigger: hero,
                 start: 'top top',
-                end: '+=' + (FRAME_COUNT + 50) + '%',
+                end: '+=' + (FRAME_COUNT * 2.5) + '%',
                 pin: true,
-                pinSpacing: true,
-                scrub: 0.8,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+                scrub: 1,
                 onUpdate: self => {
-                    const now = performance.now();
-                    if (now - lastUpdate < 20) return;
-                    lastUpdate = now;
-                    const progress = self.progress;
-                    const idx = Math.min(Math.floor(progress * (FRAME_COUNT - 1)), FRAME_COUNT - 1) + 1;
+                    const idx = Math.min(Math.floor(self.progress * (FRAME_COUNT - 1)), FRAME_COUNT - 1) + 1;
                     if (idx !== currentFrame) {
                         currentFrame = idx;
                         requestAnimationFrame(() => drawFrame(idx));
-                        if (frameProgress) {
-                            frameProgress.textContent = idx + ' / ' + FRAME_COUNT;
-                        }
                     }
                 }
             });
@@ -1651,13 +1619,18 @@
             ScrollTrigger.refresh();
         }
 
-        window.addEventListener('resize', resizeCanvas);
+        let resizeTimer;
+        function handleResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                resizeCanvas();
+                ScrollTrigger.refresh();
+            }, 100);
+        }
+        window.addEventListener('resize', handleResize, { passive: true });
+        window.addEventListener('orientationchange', handleResize, { passive: true });
 
         preloadNextBatch(1);
-
-        ScrollTrigger.addEventListener('refresh', () => {
-            if (heroReady) drawFrame(currentFrame);
-        });
 
         function initRevealAnimations() {
             gsap.utils.toArray('.section-head.reveal').forEach(el => {
